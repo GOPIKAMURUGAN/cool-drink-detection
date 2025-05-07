@@ -1,0 +1,82 @@
+/* Full-page background setup */
+body {
+    font-family: Arial, sans-serif;
+    background: url('./Images/proposed img 1.jpg') no-repeat center center fixed;
+    background-size: cover;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    position: relative;
+}
+
+/* Light background overlay */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7); /* Adjust transparency */
+    z-index: -1;
+}
+
+/* Title: Keep it at the top center */
+h1 {
+    position: absolute;
+    top: 30px;  /* Adjust position to keep it near the top */
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 26px;
+    color: #3e216d;
+    font-weight: bold;
+}
+
+/* Centered Login Box */
+.login-container {
+    background: white;  /* Pure white background */
+    width: 350px;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Login Title */
+h2 {
+    color: #3e216d;
+    font-size: 26px;
+    margin-bottom: 15px;
+}
+
+/* Input Fields */
+input {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* Login Button */
+button {
+    width: 100%;
+    padding: 10px;
+    background: #3e216d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background: #341b5a;
+}

@@ -1,0 +1,207 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #d3d3d3;
+    margin: 0;
+    padding: 0;
+    background: url('./Images/proposed img 1.jpg') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);  /* Change 0.6 to control transparency */
+    z-index: -1; /* stay behind all content */
+}
+
+h1 {
+    margin-top: 20px;
+    color: #333;
+}
+
+/* Container Layout */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 85%;
+    max-width: 1800px;
+    margin: 30px auto;
+    background: transparent;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 0;
+    gap: 30px;
+    
+}
+
+.title-container {
+    background-color: #3e216d;
+    
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 8px;
+    width: 100%;
+}
+
+/* Left Section */
+.left-section {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    border-radius: 0;
+}
+
+/* Right Section */
+.right-section {
+    width: 35%;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.08);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Shift Section */
+.shift-section {
+    margin-top: 20px;
+}
+
+
+.image-section img {
+    width: 300px;
+    height: 200px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-top: 10px;
+}
+.image-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 500px;  /* Match webcam width */
+}
+
+#preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 500px; /* Match webcam */
+    height: 300px; /* Match webcam */
+    border: 2px solid #3e216d;
+    border-radius: 10px;
+    background-color: transparent;
+    overflow: hidden; /* Ensure no overflow */
+    text-align: center;
+    margin-top: 15px;
+}
+#webcam {
+    width: 500px;
+    height: 300px;
+    border: 2px solid #3e216d;
+    border-radius: 10px;
+    background-color: transparent;
+    object-fit: cover;
+    margin-top: 15px;
+}
+
+#preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure full coverage */
+    border-radius: 10px;
+}
+
+/* Detection Results - Now Centered at Bottom */
+.detection-results {
+    position: relative; /* Change from absolute to relative */
+    margin: 0 auto 30px auto; /* Add margin to push it below other content */
+    font-size: 16px;
+    padding: 0 px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Buttons */
+button {
+    background-color: #3e216d;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 10px 5px 0 5px;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(62, 33, 109, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #341b5a;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 20px;
+    width: 50%;
+    max-height: 70vh; /* Limits height to 70% of viewport */
+    overflow-y: auto; /* Enables scrolling if content overflows */
+    border-radius: 10px;
+}
+
+
+.close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.database-list {
+    max-height: 300px; /* Adjust height */
+    overflow-y: auto; /* Enables vertical scrolling */
+}
+
+ul {
+    list-style-type: none; /* Removes bullets */
+    padding: 0; /* Removes default padding */
+    margin: 0; /* Removes default margin */
+}
+
+
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

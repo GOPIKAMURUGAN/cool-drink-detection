@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cool Drink Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="data:,">
+    <script type="module" src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@1.0.15/dist/browser-image-compression.js"></script>
+
+
+</head>
+<body>
+
+    <div class="title-container">
+        Cool Drink Detection And Analysis Using AI
+    </div>
+
+    <div class="container">
+        <div class="left-section">
+            <div class="shift-section">
+                <label for="shiftSelect">Select Shift:</label>
+                <select id="shiftSelect">
+                    <option value="">-- Select Shift --</option>
+                    <option value="shift1">Shift 1 (6 AM – 2 PM)</option>
+                    <option value="shift2">Shift 2 (2 PM – 10 PM)</option>
+                    <option value="shift3">Shift 3 (10 PM – 6 AM)</option>
+                </select>
+            </div>
+
+            <div class="camera-controls">
+                <label for="webcamSelect">Select Webcam:</label>
+                <select id="webcamSelect"></select>
+                <button onclick="startCamera()">Start Camera</button>
+            </div>
+
+            <div class="video-section">
+                <video id="webcam" class="preview" autoplay></video>
+                <canvas id="canvas" style="display: none;"></canvas>
+                <img id="capturedImage" style="display: none;">
+                <div class="video-buttons">
+                    <button id="autoCaptureBtn">Automatic Capture</button>
+                    <button id="manualCaptureBtn">Manual Capture</button>
+                </div>
+                <div class="video-buttons">
+                    <button onclick="captureImage()">Capture Image</button>
+                    <button onclick="stopCamera()">Stop Camera</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-section">
+            <div class="image-section">
+                <label for="imageUpload">Upload an Image:</label>
+                <input type="file" id="imageUpload" accept="image/*">
+
+                <div id="preview">
+                    <img id="previewImage" src="" alt="Image Preview" style="display: none; width:100%; height:100%; object-fit: cover; border-radius:10px;">
+                </div>
+                <button id="processImageBtn">Process Image</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="detection-results">
+        <h2>Detection Results</h2>
+        <p><strong>Brand:</strong> <span id="brand">---</span></p>
+        <p><strong>Color:</strong> <span id="color">---</span></p>
+        <p><strong>Flavor:</strong> <span id="flavor">---</span></p>
+        <p><strong>Ingredients:</strong> <span id="ingredients">---</span></p>
+        <p><strong>Detection Status:</strong> <span id="detection_status">---</span></p>
+    </div>
+    
+    <div id="databaseModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('databaseModal').style.display='none'">&times;</span>
+            <h2>Available Databases</h2>
+            <ul id="databaseList"></ul>
+        </div>
+    </div>
+    
+    <div id="tableSection" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('tableSection').style.display='none'">&times;</span>
+            <h2>Tables in Database</h2>
+            <ul id="tableList"></ul>
+            <div id="tableContent"></div>
+        </div>
+    </div>
+    
+
+    <button onclick="openDashboard()">Open Dashboard</button>
+    <button id="openDatabaseBtn">🔓 Open Database</button>
+    <script>
+        document.getElementById("openDatabaseBtn").addEventListener("click", function() {
+            fetch('/check_role')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.role === "admin") {
+                        fetch('/list_databases')
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.files) {
+                                    let fileList = document.getElementById("databaseList");
+                                    fileList.innerHTML = ""; // Clear old list
+                                    data.files.forEach(file => {
+                                        let listItem = document.createElement("li");
+                                        listItem.innerHTML = `<button onclick="viewDatabase('${file}')">${file}</button>`;
+                                        fileList.appendChild(listItem);
+                                    });
+                                    document.getElementById("databaseModal").style.display = "block";
+                                } else {
+                                    alert("⚠ No database files found.");
+                                }
+                            });
+                    } else {
+                        alert("❌ Access Denied! Restricted for Employees.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        });
+        
+        function viewDatabase(dbName) {
+            fetch(`/view_database/${dbName}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.tables) {
+                        let tableList = document.getElementById("tableList");
+                        tableList.innerHTML = ""; // Clear old list
+                        data.tables.forEach(table => {
+                            let tableItem = document.createElement("li");
+                            tableItem.innerHTML = `<button onclick="viewTable('${dbName}', '${table}')">${table}</button>`;
+                            tableList.appendChild(tableItem);
+                        });
+                        document.getElementById("tableSection").style.display = "block";
+                    } else {
+                        alert("⚠ No tables found in this database.");
+                    }
+                });
+        }
+        
+        function viewTable(dbName, tableName) {
+            fetch(`/view_table/${dbName}/${tableName}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.columns && data.rows) {
+                        let tableContent = document.getElementById("tableContent");
+                        tableContent.innerHTML = `<h3>${tableName}</h3>`;
+        
+                        let tableHtml = "<table border='1'><tr>";
+                        data.columns.forEach(col => {
+                            tableHtml += `<th>${col}</th>`;
+                        });
+                        tableHtml += "</tr>";
+        
+                        data.rows.forEach(row => {
+                            tableHtml += "<tr>";
+                            row.forEach(cell => {
+                                tableHtml += `<td>${cell}</td>`;
+                            });
+                            tableHtml += "</tr>";
+                        });
+        
+                        tableHtml += "</table>";
+                        tableContent.innerHTML += tableHtml;
+                    } else {
+                        alert("⚠ No data found in this table.");
+                    }
+                });
+        }
+    </script>
+        
+
+
+    <script>
+        function openDashboard() {
+            fetch('/open_dashboard')
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error("Error:", error));
+        }
+    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    
+
+</body>
+</html>
